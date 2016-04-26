@@ -39,7 +39,7 @@ def trade(stock_market, portfolio, reccomended_stocks, data, run_no):
 		#possible_purchases = find_possible_purchases(stock_market, portfolio, data)
 
 	portfolio.sell(stock_market, run_no, data)
-	print(reccomended_stocks)
+
 #	if run_no == 1 or run_no % 6 == 0 or run_no == 49:
 	portfolio.invest(reccomended_stocks, run_no, data)
 
@@ -79,9 +79,9 @@ class Portfolio:
 		for volume, (stock, weight, mean, std) in zip(volumes, possible_purchases):
 			if data == 'historic':
 				#if volume*stock.closes[0] <= self.balance:
-
-				self.stocks.append((stock, stock.closes[0], floor(volume)))
-				self.trans(stock, 'buy', stock.closes[0], 0, floor(volume), run_no)
+				if stock not in [investment[0] for investment in self.stocks]:
+					self.stocks.append((stock, stock.closes[0], floor(volume)))
+					self.trans(stock, 'buy', stock.closes[0], 0, floor(volume), run_no)
 
 			elif data == 'intraday':
 				#if volume*stock.prices[0] <= self.balance:

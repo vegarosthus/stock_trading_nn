@@ -29,9 +29,6 @@ def plot(earnings, benchmark, run_no = None):
 def plot_learning_curve(costs_train, costs_cv, costs_test, accuracies_train, f1s_train, accuracies_cv, f1s_cv, accuracies_test, f1s_test):
 
 	x = range(len(costs_train))
-
-
-
 	
 	fig = plt.figure()
 	ax = plt.subplot(111)
@@ -56,6 +53,34 @@ def plot_learning_curve(costs_train, costs_cv, costs_test, accuracies_train, f1s
 
 	path = '/Users/vegarosthus/Dropbox/costs.png'
 	plt.savefig(path)
+
+def plot_weight_dev(thetas, time):
+
+	figs = []
+	axs = []
+	
+	for theta, i in zip(thetas, range(len(thetas))):
+		figs.append(plt.figure(figsize=(12, 9)))
+		axs.append(figs[i].add_subplot(111))
+		axs[i].set_title('colorMap')
+
+		plt.imshow(theta)
+	
+		axs[i].set_aspect('equal')
+
+		cax = figs[i].add_axes([0.25, 0.1, 0.78, 0.8])
+
+		cax.get_xaxis().set_visible(False)
+		cax.get_yaxis().set_visible(False)
+		cax.patch.set_alpha(1)
+		cax.set_frame_on(False)
+
+		plt.colorbar(orientation='vertical')
+
+		path = '/Users/vegarosthus/Dropbox/Theta' + str(i+1) + time + '.png'
+		plt.savefig(path)
+#		plt.show()
+
 
 def plot_markowitz(requested_stocks, means, stds, opt_means, opt_stds):
 

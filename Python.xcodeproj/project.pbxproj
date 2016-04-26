@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
+		51263F461CCBB1A8002CD63F /* test.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = test.py; sourceTree = "<group>"; };
 		515932A41CC1A26B00BA38E6 /* nn.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = nn.py; sourceTree = "<group>"; };
 		516536941C8F2AB4009D2CC9 /* optimization.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = optimization.py; sourceTree = "<group>"; };
 		516536951C937235009D2CC9 /* stock_market.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = stock_market.py; sourceTree = "<group>"; };
@@ -24,6 +25,7 @@
 		51A028871BB6049400003903 = {
 			isa = PBXGroup;
 			children = (
+				51263F461CCBB1A8002CD63F /* test.py */,
 				515932A41CC1A26B00BA38E6 /* nn.py */,
 				516536981C949EBB009D2CC9 /* file_io.py */,
 				51CF14DF1CC2CB400045439B /* main.py */,

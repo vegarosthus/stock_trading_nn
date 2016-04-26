@@ -3,6 +3,7 @@ import heapq
 import numpy as np
 import csv
 
+from plot_stockdata import plot_weight_dev
 from scipy.optimize import minimize
 
 N_iter = 1
@@ -54,6 +55,9 @@ class NeuralNetwork():
 	def set_theta(self, theta):
 		self.Theta = theta
 	
+	def get_theta(self):
+		return self.Theta
+	
 	def create_thetas(self):
 		
 		theta1 = self.random_init_weights(self.HIDDEN1_SZ, self.INPUT_SZ)
@@ -89,6 +93,17 @@ class NeuralNetwork():
 		sigmoid_array = 1/(1+np.exp(-array))
 	
 		return sigmoid_array
+	
+	def plot_weights(self, grad, time):
+		
+		Theta1, Theta2, Theta3 = self.parameter_roll_in(grad)
+		
+		if Theta3 == None:
+			thetas = [Theta1, Theta2]
+		else:
+			thetas = [Theta1, Theta2, Theta3]
+	
+		plot_weight_dev(thetas, time)
 
 	def callbackF(self, theta, type = None):
 
@@ -98,6 +113,11 @@ class NeuralNetwork():
 		lambda_reg = 0.1
 
 		J, grad = self.cost_function(self.X, self.y, lambda_reg, theta, type)
+#		if N_iter == 1:
+#			self.plot_weights(grad, "initial")
+#		elif N_iter == 200:
+#			self.plot_weights(grad, "after_training")
+
 		J_train, accuracy_train, f1_score_train = self.test_nn(self.X, self.y, lambda_reg, theta, type)
 		J_cv, accuracy_cv, f1_score_cv = self.test_nn(self.X_cv, self.y_cv, lambda_reg, theta, type)
 		J_test, accuracy_test, f1_score_test = self.test_nn(self.X_test, self.y_test, lambda_reg, theta)
@@ -127,6 +147,7 @@ class NeuralNetwork():
 		result = minimize(self.F, theta, method = 'BFGS', args=(X, y, lambda_reg, type), callback = self.callbackF, jac = self.dF, options={'disp': True, 'maxiter': 200})
 		
 		self.Theta = result.x
+		
 	
 		return result
 
@@ -286,13 +307,12 @@ class NeuralNetwork():
 			
 			#Forward propagation
 			a1, a2, a3, h_theta = self.forward_propagation(X[i,:], Theta1, Theta2, Theta3)
+			
+			y_p[i] = h_theta
 
-			print(h_theta, stocks[i].name)
-
+		promising_stock_indices = heapq.nlargest(20, range(len(y_p)), y_p.take)
 		
-		promising_stock_indices = heapq.nlargest(10, range(len(y_p)), y_p.take)
-		
-		promising_stocks = [stocks[index] for index in promising_stock_indices]
+		promising_stocks = [(stocks[index], y_p[index]) for index in promising_stock_indices if y_p[index] > 0.9]
 		
 		return X, stocks, y_p, promising_stocks
 
@@ -530,6 +550,7 @@ class TrainingSet():
 		
 		X = np.zeros((len(stock_market.stocks)*EX_PER_STOCK, INTERVAL*FEATURES))
 		y = np.zeros((len(stock_market.stocks)*EX_PER_STOCK, 1))
+		
 		
 		stocks = []
 		
