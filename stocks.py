@@ -209,7 +209,7 @@ class Stock(Company):
 			
 			if run_no == 0:
 				try:
-					for i in range(1,1+observed_days):
+					for i in range(25,25+observed_days):
 						
 						
 
@@ -230,7 +230,7 @@ class Stock(Company):
 				
 			else:
 				try:
-					line = history_txt[1-run_no].split(b"\t")
+					line = history_txt[25-run_no].split(b"\t")
 
 	#				self.dates.pop()
 	#				self.dates.insert(0, float(line[0].decode("UTF-8")))

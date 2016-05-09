@@ -23,10 +23,11 @@ def plot(earnings, benchmark, run_no = None):
 	#plt.plot(x[len(stock.opens)-len(stock.opens_lower_bb):], stock.opens_lower_bb)
 	
 
-	path = '/Users/vegarosthus/Dropbox/portfolio' + str(run_no) + '.png'
+#	path = '/Users/vegarosthus/Dropbox/portfolio' + str(run_no) + '.png'
+	path = '/Users/vegarosthus/Dropbox/learning_curve.png'
 	plt.savefig(path)
 
-def plot_learning_curve(costs_train, costs_cv, costs_test, accuracies_train, f1s_train, accuracies_cv, f1s_cv, accuracies_test, f1s_test):
+def plot_learning_curve(costs_train, costs_cv, costs_test, accuracies_train, f1s_train, accuracies_cv, f1s_cv, accuracies_test, f1s_test, run_no):
 
 	x = range(len(costs_train))
 	
@@ -47,11 +48,11 @@ def plot_learning_curve(costs_train, costs_cv, costs_test, accuracies_train, f1s
 	plt.ylabel('cost')
 	plt.title('Cost as a function of iterations')
 
-	ax.legend()
+	ax.legend(loc = 'lower right')
 
 	plt.ylim([0,1])
 
-	path = '/Users/vegarosthus/Dropbox/costs.png'
+	path = '/Users/vegarosthus/Dropbox/costs' + str(run_no) + '.png'
 	plt.savefig(path)
 
 def plot_weight_dev(thetas, time):

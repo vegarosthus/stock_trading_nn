@@ -42,22 +42,6 @@ class StockMarket:
 
 
 	def get_returns(self, stocks, observed_days, interval):
-		
-		# Get historic stock returns
-#		if stocks != 'all':
-#			returns = []
-#			for stock in stocks:
-#				stock_return = self.stocks[[s.name for s in self.stocks].index(stock)].get_returns(observed_days, interval)
-#				returns.append(stock_return)
-#
-#		else:
-#			dds = [stock.get_dd() for stock in self.stocks]
-#			returns = [stock.get_returns(observed_days, interval) for stock in self.stocks]# if stock.volumes_sma != [] and stock.volumes_sma[0] >= 200000]
-#
-#		commodity_returns = [commodity.get_returns(observed_days, interval) for commodity in self.commodities]
-#		
-#		for com in commodity_returns:
-#			returns.append(com)
 
 		returns = []
 		
@@ -70,17 +54,6 @@ class StockMarket:
 		return returns
 	
 	def get_sma_bb_ratios(self, stocks):
-	
-		# Get historic stock returns
-#		if stocks != 'all':
-#			ratios = []
-#			for stock in stocks:
-#				stock_ratio = self.stocks[[s.name for s in self.stocks].index(stock)].get_sma_bb_ratio()
-#				ratios.append(stock_ratio)
-#
-#		else:
-#			dds = [stock.get_dd() for stock in self.stocks]
-#			ratios = [stock.get_sma_bb_ratio() for stock in self.stocks]# if stock.volumes_sma != [] and stock.volumes_sma[0] >= 200000]
 
 		ratios = []
 
@@ -93,20 +66,6 @@ class StockMarket:
 		return ratios
 
 	def get_stock_covariances(self, returns):
-		
-#		if stocks == 'all':
-#			dds = [stock.get_dd() for stock in self.stocks]
-#			data = [stock.get_returns(observed_days, interval) for stock in self.stocks]# if stock.volumes_sma != [] and stock.volumes_sma[0] >= 200000]
-#		else:
-#			data = []
-#			for stock in stocks:
-#				stock_return = self.stocks[[s.name for s in self.stocks].index(stock)].get_returns(observed_days, interval)
-#				data.append(stock_return)
-#
-#		commodity_data = [commodity.get_returns(observed_days, interval) for commodity in self.commodities]
-#		
-#		for com in commodity_data:
-#			data.append(com)
 
 		cov_matrix = np.cov(returns)
 
@@ -144,13 +103,10 @@ class StockMarket:
 		
 		if stocks == 'all':
 			for i, stock in zip(range(len(self.stocks)), self.stocks):
-#				if stock.volumes_sma == [] or stock.volumes_sma[0] <= 100000 or stock.hammer() == 0:
 				if stock not in promising_stocks or stock.volumes_sma == [] or stock.volumes_sma[0] <= 100000:
 					filter.append(self.stocks.index(stock))
 		else:
 			for i, stock in zip(range(len(stocks)), stocks):
-#				if self.stocks[[s.name for s in self.stocks].index(stock)].volumes_sma == [] or self.stocks[[s.name for s in self.stocks].index(stock)].volumes_sma[0] <= 200000 or self.stocks[[s.name for s in self.stocks].index(stock)].get_volume_inc() < 0.0 or not self.stocks[[s.name for s in self.stocks].index(stock)].hammer():
-#					filter.append([s.name for s in self.stocks].index(stock))
 				if self.stocks[[s.name for s in self.stocks].index(stock)] not in promising_stocks:
 					filter.append(stocks.index(stock))
 					

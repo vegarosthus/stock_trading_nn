@@ -110,7 +110,7 @@ class NeuralNetwork():
 		global N_iter
 		print("Iteration No.: " + str(N_iter))
 		
-		lambda_reg = 0.1
+		lambda_reg = 1.2
 
 		J, grad = self.cost_function(self.X, self.y, lambda_reg, theta, type)
 #		if N_iter == 1:
@@ -118,9 +118,9 @@ class NeuralNetwork():
 #		elif N_iter == 200:
 #			self.plot_weights(grad, "after_training")
 
-		J_train, accuracy_train, f1_score_train = self.test_nn(self.X, self.y, lambda_reg, theta, type)
-		J_cv, accuracy_cv, f1_score_cv = self.test_nn(self.X_cv, self.y_cv, lambda_reg, theta, type)
-		J_test, accuracy_test, f1_score_test = self.test_nn(self.X_test, self.y_test, lambda_reg, theta)
+		J_train, accuracy_train, f1_score_train = self.test_nn(self.X, self.y, 0, theta, type)
+		J_cv, accuracy_cv, f1_score_cv = self.test_nn(self.X_cv, self.y_cv, 0, theta, type)
+		J_test, accuracy_test, f1_score_test = self.test_nn(self.X_test, self.y_test, 0, theta)
 		
 		self.costs_training_set.append(J)
 		self.costs_cv_set.append(J_cv)
@@ -147,7 +147,6 @@ class NeuralNetwork():
 		result = minimize(self.F, theta, method = 'BFGS', args=(X, y, lambda_reg, type), callback = self.callbackF, jac = self.dF, options={'disp': True, 'maxiter': 200})
 		
 		self.Theta = result.x
-		
 	
 		return result
 
@@ -312,7 +311,7 @@ class NeuralNetwork():
 
 		promising_stock_indices = heapq.nlargest(20, range(len(y_p)), y_p.take)
 		
-		promising_stocks = [(stocks[index], y_p[index]) for index in promising_stock_indices if y_p[index] > 0.9]
+		promising_stocks = [(stocks[index], y_p[index]) for index in promising_stock_indices if y_p[index] > 0.7]
 		
 		return X, stocks, y_p, promising_stocks
 
@@ -434,10 +433,10 @@ class NeuralNetwork():
 			else:
 			
 				if h_theta >= 0.5 and y[i] == 0:
-					false_negatives += 1
+					false_positives += 1
 					y_test[i] = 1
 				elif h_theta < 0.5 and y[i] == 1:
-					false_positives += 1
+					false_negatives += 1
 					y_test[i] = 1
 				elif h_theta >= 0.5 and y[i] == 1:
 					true_positives += 1

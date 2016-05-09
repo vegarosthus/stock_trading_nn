@@ -28,7 +28,7 @@ class Commodity:
 		
 		if run_no == 0:
 			try:
-				for i in range(1,observed_days):
+				for i in range(25,25+observed_days):
 					
 					line = history_txt[i].split(b"\t")
 					self.prices_open.append(float(line[3].decode("UTF-8")))
@@ -39,7 +39,7 @@ class Commodity:
 				pass
 		else:
 			try:
-				line = history_txt[50-run_no].split(b"\t")
+				line = history_txt[25-run_no].split(b"\t")
 				self.prices_open.pop()
 				self.prices_open.insert(0, float(line[0].decode("UTF-8")))
 				self.prices_close.pop()
