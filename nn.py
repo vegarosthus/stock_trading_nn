@@ -17,7 +17,7 @@ class NeuralNetwork():
 		self.HIDDEN1_SZ = hidden1_sz
 		self.HIDDEN2_SZ = hidden2_sz
 	
-		self.Theta = self.create_thetas()
+		self.Theta = self.create_weight_matrices()
 	
 		#Arrays for model verification
 		self.costs_training_set = []
@@ -58,7 +58,7 @@ class NeuralNetwork():
 	def get_theta(self):
 		return self.Theta
 	
-	def create_thetas(self):
+	def create_weight_matrices(self):
 		
 		theta1 = self.random_init_weights(self.HIDDEN1_SZ, self.INPUT_SZ)
 		
@@ -75,6 +75,11 @@ class NeuralNetwork():
 		return Theta
 	
 	def F(self, theta = None, X = None, y = None, lambda_reg = None, type = None):
+		
+		'''
+			Envelope for cost function.
+		'''
+		
 		if theta.all() == None:
 			theta = self.Theta
 		if X.all() == None or y.all() == None or lambda_reg == None:
@@ -82,6 +87,11 @@ class NeuralNetwork():
 		return self.cost_function(X, y, lambda_reg, theta, type)[0]
 
 	def dF(self, theta = None, X = None, y = None, lambda_reg = None, type = None):
+		
+		'''
+			Envelope for derivative of cost.
+		'''
+		
 		if theta.all() == None:
 			theta = self.Theta
 		if X.all() == None or y.all() == None or lambda_reg == None:
@@ -89,6 +99,11 @@ class NeuralNetwork():
 		return self.cost_function(X, y, lambda_reg, theta, type)[1]
 
 	def sigmoid(self, array):
+		
+		'''
+			Neuron activation function.
+			Returns the elementwise sigmoid map of the input array.
+		'''
 	
 		sigmoid_array = 1/(1+np.exp(-array))
 	
@@ -96,9 +111,13 @@ class NeuralNetwork():
 	
 	def plot_weights(self, grad, time):
 		
+		'''
+			Function to plot the neuron weights as a color coded map before and after the network is trained.
+		'''
+		
 		Theta1, Theta2, Theta3 = self.parameter_roll_in(grad)
 		
-		if Theta3 == None:
+		if Theta3 == [None]:
 			thetas = [Theta1, Theta2]
 		else:
 			thetas = [Theta1, Theta2, Theta3]
@@ -113,10 +132,11 @@ class NeuralNetwork():
 		lambda_reg = 1.2
 
 		J, grad = self.cost_function(self.X, self.y, lambda_reg, theta, type)
-#		if N_iter == 1:
-#			self.plot_weights(grad, "initial")
-#		elif N_iter == 200:
-#			self.plot_weights(grad, "after_training")
+		
+		if N_iter == 1:
+			self.plot_weights(grad, "initial")
+		elif N_iter == 200:
+			self.plot_weights(grad, "after_training")
 
 		J_train, accuracy_train, f1_score_train = self.test_nn(self.X, self.y, 0, theta, type)
 		J_cv, accuracy_cv, f1_score_cv = self.test_nn(self.X_cv, self.y_cv, 0, theta, type)
@@ -144,7 +164,7 @@ class NeuralNetwork():
 
 		print("Training network...")
 		
-		result = minimize(self.F, theta, method = 'BFGS', args=(X, y, lambda_reg, type), callback = self.callbackF, jac = self.dF, options={'disp': True, 'maxiter': 200})
+		result = minimize(self.F, theta, method = 'BFGS', args=(X, y, lambda_reg, type), callback = self.callbackF, jac = self.dF, options={'disp': True, 'maxiter': 400})
 		
 		self.Theta = result.x
 	
@@ -162,7 +182,7 @@ class NeuralNetwork():
 		if not self.HIDDEN2_SZ:
 			Theta2 = np.reshape(theta[index1 : ], (self.OUTPUT_SZ, (self.HIDDEN1_SZ + 1)), order='F')
 		
-			return Theta1, Theta2, [None]
+			return Theta1, Theta2, np.array([None])
 		else:
 			Theta2 = np.reshape(theta[index1 : index2], (self.HIDDEN2_SZ, (self.HIDDEN1_SZ + 1)), order='F')
 			Theta3 = np.reshape(theta[index2 : ], (self.OUTPUT_SZ, (self.HIDDEN2_SZ + 1)), order='F')
@@ -170,6 +190,10 @@ class NeuralNetwork():
 			return Theta1, Theta2, Theta3
 
 	def forward_propagation(self, input_array, Theta1, Theta2, Theta3 = None):
+		
+		'''
+			Performs forward propagation to derive the activation values of the current network state as a function of the input vector.
+		'''
 		
 		# Perform forward propagation and return single input cost
 		a1 = input_array
@@ -327,7 +351,7 @@ class NeuralNetwork():
 		
 		sines = np.linspace(-2*np.pi, 2*np.pi, L_out*(L_in+1))
 		
-		W = np.reshape(sines, (L_out, (L_in + 1)), order='F')/10
+		W = np.reshape(sines, (L_out, (L_in + 1)), order='F')/50
 		
 		return W
 
@@ -335,7 +359,7 @@ class NeuralNetwork():
 	def gradient_check(self, lambda_reg):
 	
 		INPUTS = 30
-		HIDDEN1 = 10
+		HIDDEN1 = 5000
 		HIDDEN2 = 5
 		OUTPUTS = 1
 		
@@ -466,9 +490,10 @@ class NeuralNetwork():
 
 		accuracy = (m-no_of_errors)/m
 
-#		print(accuracy)
-#		print(f1_score)
-#		print(J_test)
+		if type == 'test':
+			print(accuracy)
+			print(f1_score)
+			print(J_test)
 
 		return J_test, accuracy, f1_score
 
@@ -508,111 +533,6 @@ class NeuralNetwork():
 		result = self.minimize_cost(X,y,1,parameters,"verification")
 
 		self.test_nn(X,y,1,result.x,"verification")
-
-
-
-class TrainingSet():
-
-	def __init__(self, stock_market, NO_OF_FEATURES, EX_PER_STOCK, INTERVAL):
-		
-		self.min = [0]*6
-		self.max = [0]*6
-		self.mean = [0]*6
-		self.var = [0]*6
-
-		self.X_train, self.y_train, self.X_cv, self.y_cv, self.X_test, self.y_test = self.generate_data_set(stock_market, NO_OF_FEATURES, EX_PER_STOCK, INTERVAL)
-
-		self.X_predict, self.stocks = self.generate_data_set(stock_market, NO_OF_FEATURES, 1, INTERVAL, type = "predict")
-	
-	def get_data_set(self):
-	
-		return self.X_train, self.y_train, self.X_cv, self.y_cv, self.X_test, self.y_test, self.X_predict, self.stocks
-
-	def feature_norm(self, array, feature, type = None):
-		
-		#Normalize array elements by subtracting the mean and dividing by standard deviation
-		if type == "training":
-			
-			self.min[feature] = np.min(array)
-			self.max[feature] = np.max(array)
-			
-			self.mean[feature] = np.mean(array)
-			self.var[feature] = np.var(array)
-		
-		norm_array = (array-self.min[feature])/(self.max[feature]-self.min[feature])
-		#norm_array = (array-self.mean[feature])/self.var[feature]
-		
-		return norm_array
-
-
-	def generate_data_set(self, stock_market, FEATURES, EX_PER_STOCK, INTERVAL, type = "training"):
-		
-		X = np.zeros((len(stock_market.stocks)*EX_PER_STOCK, INTERVAL*FEATURES))
-		y = np.zeros((len(stock_market.stocks)*EX_PER_STOCK, 1))
-		
-		
-		stocks = []
-		
-		for stock, i in zip(stock_market.stocks, range(len(stock_market.stocks))):
-
-			open_incs = list(map(lambda x, y: round(y-x, 4), stock.opens_sma[-1::-1], stock.opens_sma[-2::-1]))
-			close_incs = list(map(lambda x, y: round(y-x, 4), stock.closes_sma[-1::-1], stock.closes_sma[-2::-1]))
-			high_incs = list(map(lambda x, y: round(y-x, 4), stock.highs_sma[-1::-1], stock.highs_sma[-2::-1]))
-			low_incs = list(map(lambda x, y: round(y-x, 4), stock.lows_sma[-1::-1], stock.lows_sma[-2::-1]))
-			volume_incs = list(map(lambda x, y: round(y-x, 4), stock.volumes_sma[-1::-1], stock.volumes_sma[-2::-1]))
-			value_incs = list(map(lambda x, y: round(y-x, 4), stock.values_sma[-1::-1], stock.values_sma[-2::-1]))
-
-			if type == "training":
-				for j in range(EX_PER_STOCK):
-					
-					X[EX_PER_STOCK*i+j,:] = np.concatenate((open_incs[j:INTERVAL+j], close_incs[j:INTERVAL+j], high_incs[j:INTERVAL+j], low_incs[j:INTERVAL+j], volume_incs[j:INTERVAL+j], value_incs[j:INTERVAL+j]))
-					
-					if close_incs[INTERVAL+j] > 0:
-						y[EX_PER_STOCK*i+j] = 1
-					else:
-						y[EX_PER_STOCK*i+j] = 0
-		
-			elif type == "predict":
-
-				X[i,:] = np.concatenate((open_incs[-INTERVAL:], close_incs[-INTERVAL:], high_incs[-INTERVAL:], low_incs[-INTERVAL:], volume_incs[-INTERVAL:], value_incs[-INTERVAL:]))
-
-				stocks.append(stock)
-
-		#Normalize data
-		X[:,0:INTERVAL] = self.feature_norm(X[:,0:INTERVAL], 0, type)
-		X[:,INTERVAL:2*INTERVAL] = self.feature_norm(X[:,INTERVAL:2*INTERVAL], 1, type)
-		X[:,2*INTERVAL:3*INTERVAL] = self.feature_norm(X[:,2*INTERVAL:3*INTERVAL], 2, type)
-		X[:,3*INTERVAL:4*INTERVAL] = self.feature_norm(X[:,3*INTERVAL:4*INTERVAL], 3, type)
-		X[:,4*INTERVAL:5*INTERVAL] = self.feature_norm(X[:,4*INTERVAL:5*INTERVAL], 4, type)
-		X[:,5*INTERVAL:6*INTERVAL] = self.feature_norm(X[:,5*INTERVAL:6*INTERVAL], 5, type)
-
-		if type == "predict":
-			return X, stocks
-		
-		number_of_test_items = np.floor(len(stock_market.stocks)*EX_PER_STOCK*0.4)
-		
-		random_indices = np.random.randint(len(stock_market.stocks)*EX_PER_STOCK-1, None, number_of_test_items)
-		
-		cv_indices = random_indices[ : np.floor(np.size(random_indices)/2)]
-		test_indices = random_indices[np.floor(np.size(random_indices)/2) : ]
-		
-		X_cv = np.zeros((np.size(cv_indices), INTERVAL*FEATURES))
-		y_cv = np.zeros((np.size(cv_indices),1))
-		
-		X_test = np.zeros((np.size(test_indices), INTERVAL*FEATURES))
-		y_test = np.zeros((np.size(test_indices),1))
-		
-		for cv_index, test_index, i in zip(cv_indices, test_indices, range(np.size(cv_indices))):
-			X_cv[i,:] = X[cv_index,:]
-			y_cv[i] = y[cv_index]
-
-			X_test[i,:] = X[test_index,:]
-			y_test[i] = y[test_index]
-
-		X = np.delete(X, random_indices, 0)
-		y = np.delete(y, random_indices, 0)
-
-		return X, y, X_cv, y_cv, X_test, y_test
 
 
 
