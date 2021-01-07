@@ -7,12 +7,12 @@
 	objects = {
 
 /* Begin PBXFileReference section */
+		5104476E1E4D0488007B06F8 /* training_set.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = training_set.py; sourceTree = "<group>"; };
 		51263F461CCBB1A8002CD63F /* test.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = test.py; sourceTree = "<group>"; };
 		515932A41CC1A26B00BA38E6 /* nn.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = nn.py; sourceTree = "<group>"; };
 		516536941C8F2AB4009D2CC9 /* optimization.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = optimization.py; sourceTree = "<group>"; };
 		516536951C937235009D2CC9 /* stock_market.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = stock_market.py; sourceTree = "<group>"; };
 		516536961C93728C009D2CC9 /* commodities.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = commodities.py; sourceTree = "<group>"; };
-		516536981C949EBB009D2CC9 /* file_io.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = file_io.py; sourceTree = "<group>"; };
 		51A028951BB68F6000003903 /* quicksort.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = quicksort.py; sourceTree = "<group>"; };
 		51CF14DF1CC2CB400045439B /* main.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = main.py; sourceTree = "<group>"; };
 		51D408A51C5FE06D001640DD /* stocks.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = stocks.py; sourceTree = "<group>"; };
@@ -25,9 +25,9 @@
 		51A028871BB6049400003903 = {
 			isa = PBXGroup;
 			children = (
+				5104476E1E4D0488007B06F8 /* training_set.py */,
 				51263F461CCBB1A8002CD63F /* test.py */,
 				515932A41CC1A26B00BA38E6 /* nn.py */,
-				516536981C949EBB009D2CC9 /* file_io.py */,
 				51CF14DF1CC2CB400045439B /* main.py */,
 				516536961C93728C009D2CC9 /* commodities.py */,
 				516536951C937235009D2CC9 /* stock_market.py */,
@@ -49,7 +49,7 @@
 			buildConfigurationList = 51A0288F1BB6049400003903 /* Build configuration list for PBXLegacyTarget "Python" */;
 			buildPhases = (
 			);
-			buildToolPath = /usr/local/bin/python3;
+			buildToolPath = /Users/vegarosthus/anaconda3/bin/python;
 			buildWorkingDirectory = "";
 			dependencies = (
 			);
